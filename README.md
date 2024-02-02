@@ -4,6 +4,6 @@ Insect metamorphosis is a captivating aspect of animal research. The development
 
 Code version:1.0
 
-The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The expression TPM matrix of different insects is available in Data S4.
+The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The expression TPM matrix of different insects is available in Data S4. Before using, please convert the format of "Data S4.csv" to xlsx.
 
 Quantitative data on wing volumes of different insects can be found in Data S1-S3. RNA-seq raw data have been deposited in NCBI, and the accession numbers are listed in Table S1. 
