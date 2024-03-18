@@ -9,7 +9,7 @@ library(ggplot2)
 
 rm(list=ls())
 # read table
-data <- read_excel("Data S4.xlsx")
+data <- read_excel("TPM_matrix.xlsx")
 
 # Split data into four groups: Dm, Ha, Px, Lm
 groups <- list(
@@ -51,7 +51,7 @@ pca.data <- data.frame(sample = rownames(pca.info$rotation),
 
 pca.data$sample <- as.numeric(index["GROUP",])
 
-set.seed(123) # random seed
+set.seed(2024) # random seed
 
 variance_explained <- summary(pca.info)$importance[2, ] * 100
 
@@ -80,7 +80,7 @@ library(readxl)
 
 rm(list=ls())
 # read table
-data <- read_excel("Data S4.xlsx")
+data <- read_excel("TPM_matrix.xlsx")
 
 # Split data into four groups: Dm, Ha, Px, Lm
 groups <- list(
@@ -109,7 +109,7 @@ filtered_groups <- lapply(standardized_groups, function(eset) {
 # Merge the data
 merged_data <- do.call(cbind, lapply(filtered_groups, exprs))
 
-set.seed(2023)
+set.seed(2024)
 
 # UMAP clustering analysis
 umap_result <- umap(t(merged_data),n_components=2, n_neighbors = 8)
@@ -142,7 +142,7 @@ library(dendextend)
 
 rm(list=ls())
 # read table
-data <- read_excel("Data S4.xlsx")
+data <- read_excel("TPM_matrix.xlsx")
 
 # Split data into four groups: Dm, Ha, Px, Lm
 groups <- list(
