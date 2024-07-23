@@ -1,4 +1,4 @@
-### Sample PCA
+### PCA
 ```r
 library(Mfuzz)
 library(readxl)
@@ -6,10 +6,11 @@ library(ggpubr)
 library(ggthemes)
 library(gmodels)
 library(ggplot2)
+library(ggforce)
 
 rm(list=ls())
 # read table
-data <- read_excel("TPM_matrix.xlsx")
+data <- read_excel("vst_matrix.xlsx")
 
 # Split data into four groups: Dm, Ha, Px, Lm
 groups <- list(
@@ -19,7 +20,7 @@ groups <- list(
   Lm = data[, grepl("Lm-", colnames(data))]
 )
 
-# Z-score standardization and filtering
+# Mfuzz normalization and filtering
 standardized_groups <- lapply(groups, function(group) {
   eset <- new("ExpressionSet", exprs = as.matrix(group))
   eset <- filter.NA(eset, thres = 0.25)
@@ -38,36 +39,38 @@ filtered_groups <- lapply(standardized_groups, function(eset) {
 # Merge the data
 merged_data <- do.call(cbind, lapply(filtered_groups, exprs))
 
-index <- read.table("../../sample_PCA/pca_index.txt", header = T, row.names = 1)
+index <- read.table("pca_index.txt", header = T, row.names = 1)
 
-# run PCA
 pca.info <- fast.prcomp(merged_data)
+
 pca.data <- data.frame(sample = rownames(pca.info$rotation),
                        Type = c(rep("D.melanogaster", 10),
                                 rep("H.axyridis", 13),
                                 rep("P.xylostella", 11),
                                 rep("L.migratoria", 7)
-                               ), pca.info$rotation)
+                       ), pca.info$rotation)
 
 pca.data$sample <- as.numeric(index["GROUP",])
 
-set.seed(2024) # random seed
+set.seed(123)
 
 variance_explained <- summary(pca.info)$importance[2, ] * 100
 
 x_label <- paste("PC1 (", round(variance_explained[1], 2), "% variance explained)")
 y_label <- paste("PC2 (", round(variance_explained[2], 2), "% variance explained)")
 
-kmeans_result <- kmeans(pca.data[, c("PC1", "PC2")], centers = 3) # k=3
-pca.data$cluster <- as.factor(kmeans_result$cluster) # add the clustering result
+kmeans_result <- kmeans(pca.data[, c("PC1", "PC2")], centers = 3) 
+pca.data$cluster <- as.factor(kmeans_result$cluster) 
 
 ggplot(pca.data, aes(x = PC1, y = PC2, color = cluster)) +
-geom_point(size = 1) +
-geom_text(aes(label = rownames(pca.data)), vjust = -1, size = 3) +  # add labels
-scale_color_manual(values = c("#cb0000","#3398cb","#319700","#cb3398")) +
-labs(x = x_label, y = y_label) +
-theme_base() +
-theme(legend.position = "right")
+  geom_point(size = 2) +
+  geom_text(aes(label = rownames(pca.data)), vjust = -1, size = 3) + 
+  scale_color_manual(values = c("#cb0000","#319700","#3398cb")) +
+  scale_fill_manual(values = rep(NA, length(unique(pca.data$cluster)))) + 
+  labs(x = x_label, y = y_label) +
+  theme_base() +
+  theme(legend.position = "right")
+
 
 
 ```
@@ -75,12 +78,16 @@ theme(legend.position = "right")
 ```r
 library(Mfuzz)
 library(umap)
+library(vegan)
 library(ggplot2)
 library(readxl)
 
 rm(list=ls())
 # read table
-data <- read_excel("TPM_matrix.xlsx")
+
+setwd("C:/Users/zhouhang/Desktop/Metamorphosis/RNA-seq/sample_PCA/")
+
+data <- read_excel("vst_matrix.xlsx")
 
 # Split data into four groups: Dm, Ha, Px, Lm
 groups <- list(
@@ -90,7 +97,7 @@ groups <- list(
   Lm = data[, grepl("Lm-", colnames(data))]
 )
 
-# Mfuzz standardization and filtering
+# Mfuzz normalization and filtering
 standardized_groups <- lapply(groups, function(group) {
   eset <- new("ExpressionSet", exprs = as.matrix(group))
   eset <- filter.NA(eset, thres = 0.25)
@@ -129,8 +136,7 @@ ggplot(umap_df, aes(x=V1, y=V2, label=sample, color=cluster)) +
   theme_bw() +
   theme(panel.grid = element_blank())+
   labs(title="UMAP projection with K-means Clustering", x="UMAP 1", y="UMAP 2") +
-  theme(legend.position= "none") +
-  coord_fixed(ratio = 0.5)
+  theme(legend.position= "none")
 
 ```
 ### Hierarchical clustering
@@ -142,7 +148,7 @@ library(dendextend)
 
 rm(list=ls())
 # read table
-data <- read_excel("TPM_matrix.xlsx")
+data <- read_excel("vst_matrix.xlsx")
 
 # Split data into four groups: Dm, Ha, Px, Lm
 groups <- list(
