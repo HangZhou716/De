@@ -1,4 +1,4 @@
-# Developmental correspondence of juvenile stages across the locust, harlequin ladybird, and diamondback moth
+# Developmental correspondence of juvenile stages across insects
 
 Hang Zhou1*, Runguo Shu1†, Chaowei Zhang1, Yiqi Xiao1, Dong Jing1, Jiejing Tang1, Zixiong Cao2, Xi Chen1, Yang Mei1, Fei Li1*
 1Key Laboratory of Biology of Crop Pathogens and Insects of Zhejiang Province, Institute of Insect Sciences, Zhejiang University, Hangzhou 310058, Zhejiang Province, China. 
@@ -83,6 +83,37 @@ wb <- createWorkbook()
 addWorksheet(wb, "VST Data")
 writeData(wb, sheet = "VST Data", vst_df)
 
-saveWorkbook(wb, "Pxyl_VST_normalized_data.xlsx", overwrite = TRUE)
+saveWorkbook(wb, "Haxy_VST_normalized_data.xlsx", overwrite = TRUE)
+
+```
+### time-specific index
+```python
+import pandas as pd
+import numpy as np
+import openpyxl
+
+def calculate_tau(row):
+    x = row.values
+    x_hat = x / np.max(x)
+    tau = (np.sum(1 - x_hat)) / (len(x) - 1)
+    return tau
+
+# Read the expression matrix from an xlsx file
+# Assuming your file is named 'expression_matrix.xlsx'
+df = pd.read_excel('Haxy_VST_normalized_data.xlsx', index_col=0, engine='openpyxl')
+
+# Calculate Tau index for each gene
+tau_values = df.apply(calculate_tau, axis=1)
+
+# Create a new DataFrame containing gene names and corresponding Tau indices
+result = pd.DataFrame({'Gene': df.index, 'Tau': tau_values})
+
+# Sort by Tau index in descending order
+result = result.sort_values('Tau', ascending=False)
+
+# Save the results to an xlsx file
+result.to_excel('tau_index_results.xlsx', index=False, engine='openpyxl')
+
+print("Tau index calculation completed. Results have been saved to 'tau_index_results.xlsx'.")
 
 ```
