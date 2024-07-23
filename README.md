@@ -10,8 +10,6 @@ Code version:1.1
 
 The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The expression TPM matrix of different insects is available in Data S4.
 
-## For RNA-seq
-
 ### Trim_galore
 ```shell
 trim_galore -j 20 -q 20 --phred33 --stringency 3 --length 25 -e 0.1 --paired $dir/cmp/01raw_data/$fq1 $dir/cmp/01raw_data/$fq2 --gzip -o cleandata
@@ -38,7 +36,7 @@ hisat2 --new-summary -p 40 -x Haxy_index -1 ${i} -2 ${i%_1*}_R2.fq.gz 2>log/${fi
 featureCounts -T 10 -t exon -g gene_id -a Haxy_genome.gtf -o Haxy_counts.txt `ls hisat2_out/`
 ```
 ### DESeq2
-DEG analysis
+#### DEG analysis
 ```r
 library('DESeq2')
 setwd('C:/Users/xmm/Desktop/fsdownload')
@@ -62,7 +60,7 @@ res <- res[order(res$padj),]
 resdata <- merge(as.data.frame(res), as.data.frame(counts(dds, normalized=TRUE)),by='row.names',sort=FALSE)
 write.csv(resdata,file='Haxy_L2_vs_L1_DEGs.csv', row.names = FALSE)
 ```
-variance-stabilised counts
+#### variance-stabilised counts
 ```r
 library(DESeq2)
 library(openxlsx)
@@ -86,7 +84,7 @@ writeData(wb, sheet = "VST Data", vst_df)
 saveWorkbook(wb, "Haxy_VST_normalized_data.xlsx", overwrite = TRUE)
 
 ```
-### time-specific index
+#### time-specific index
 ```python
 import pandas as pd
 import numpy as np
