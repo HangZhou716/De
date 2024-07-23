@@ -112,4 +112,4 @@ print("Tau index calculation completed. Results have been saved to 'tau_index_re
 
 ```
 
-## The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The vs-counts of different insects is available in Data S4.
+### The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The vs-counts of different insects is available in Data S4.
