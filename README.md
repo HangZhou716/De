@@ -6,10 +6,6 @@ Hang Zhou1*, Runguo Shu1†, Chaowei Zhang1, Yiqi Xiao1, Dong Jing1, Jiejing Tan
 †These authors contributed equally: Hang Zhou, Runguo Shu. 
 *Correspondence author: lifei18@zju.edu.cn, zhouhang716@zju.edu.cn.
 
-Code version:1.1
-
-The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The expression TPM matrix of different insects is available in Data S4.
-
 ### Trim_galore
 ```shell
 trim_galore -j 20 -q 20 --phred33 --stringency 3 --length 25 -e 0.1 --paired $dir/cmp/01raw_data/$fq1 $dir/cmp/01raw_data/$fq2 --gzip -o cleandata
@@ -115,3 +111,5 @@ result.to_excel('tau_index_results.xlsx', index=False, engine='openpyxl')
 print("Tau index calculation completed. Results have been saved to 'tau_index_results.xlsx'.")
 
 ```
+
+## The code in "Code S1.md" is primarily used for standardization of expression levels and clustering analysis. The vs-counts of different insects is available in Data S4.
